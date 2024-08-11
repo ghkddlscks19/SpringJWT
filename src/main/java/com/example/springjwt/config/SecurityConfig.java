@@ -1,5 +1,6 @@
 package com.example.springjwt.config;
 
+import com.example.springjwt.jwt.JwtFilter;
 import com.example.springjwt.jwt.JwtUtil;
 import com.example.springjwt.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +52,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated());
         //필터 추가 LoginFilter는 인자를 받음(AuthenticationManager()메소드에 authenticationConfiguration 객체를 넣어야함) 따라서 등록 필요
         http
+                .addFilterAfter(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                         UsernamePasswordAuthenticationFilter.class);
 
