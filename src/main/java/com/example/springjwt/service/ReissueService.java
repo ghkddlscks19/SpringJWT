@@ -54,10 +54,22 @@ public class ReissueService {
 
         //make JWT
         String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
         //response
         response.setHeader("access", newAccess);
+        response.addCookie(createCookie("refresh", newRefresh));
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24 * 60 * 60);
+//        cookie.setPath("/");
+//        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }
